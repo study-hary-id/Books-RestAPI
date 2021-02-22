@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -21,8 +22,13 @@ type Author struct {
 
 var books []Book
 
-func getBook(w http.ResponseWriter, r *http.Request)    {}
-func getBooks(w http.ResponseWriter, r *http.Request)   {}
+func getBook(w http.ResponseWriter, r *http.Request) {}
+
+func getBooks(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(books)
+}
+
 func createBook(w http.ResponseWriter, r *http.Request) {}
 func updateBook(w http.ResponseWriter, r *http.Request) {}
 func deleteBook(w http.ResponseWriter, r *http.Request) {}
