@@ -55,8 +55,22 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
-func updateBook(w http.ResponseWriter, r *http.Request) {}
-func deleteBook(w http.ResponseWriter, r *http.Request) {}
+func updateBook(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func deleteBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var param = mux.Vars(r)
+
+	for i, book := range books {
+		if book.ID == param["id"] {
+			books = append(books[:i], books[i+1:]...)
+			break
+		}
+	}
+	json.NewEncoder(w).Encode(books)
+}
 
 func main() {
 	var r = mux.NewRouter()
