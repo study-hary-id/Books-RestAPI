@@ -22,7 +22,18 @@ type Author struct {
 
 var books []Book
 
-func getBook(w http.ResponseWriter, r *http.Request) {}
+func getBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var param = mux.Vars(r)
+
+	for _, book := range books {
+		if book.ID == param["id"] {
+			json.NewEncoder(w).Encode(books)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&Book{})
+}
 
 func getBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
