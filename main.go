@@ -44,19 +44,38 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 func createBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var (
-		book   Book
-		length = len(books)
+		book        Book
+		latestId, _ = strconv.Atoi(books[len(books)-1].ID)
 	)
 
 	_ = json.NewDecoder(r.Body).Decode(&book)
-	book.ID = strconv.Itoa(length + 1)
+	book.ID = strconv.Itoa(latestId + 1)
 	books = append(books, book)
 
 	json.NewEncoder(w).Encode(book)
 }
 
 func updateBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var (
+		newBook     Book
+		param       = mux.Vars(r)
+		latestId, _ = strconv.Atoi(books[len(books)-1].ID)
+	)
 
+	for i, currBook := range books {
+		if currBook.ID == param["id"] {
+
+			books = append(books[:i], books[i+1:]...)
+			_ = json.NewDecoder(r.Body).Decode(&newBook)
+			newBook.ID = strconv.Itoa(latestId + 1)
+			books = append(books, newBook)
+
+			json.NewEncoder(w).Encode(newBook)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(books)
 }
 
 func deleteBook(w http.ResponseWriter, r *http.Request) {
