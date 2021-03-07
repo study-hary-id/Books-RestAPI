@@ -9,6 +9,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
+/*
+Book is used to store all of metadata from a book.
+*/
 type Book struct {
 	ID     string  `json:"id"`
 	ISBN   string  `json:"isbn"`
@@ -16,11 +19,17 @@ type Book struct {
 	Author *Author `json:"author"`
 }
 
+/*
+Author is used to store the name of the author of the book.
+*/
 type Author struct {
 	FirstName string `json:"firstname"`
 	LastName  string `json:"lastname"`
 }
 
+/*
+books is a collection of books.
+*/
 var books []Book
 
 func getBook(w http.ResponseWriter, r *http.Request) {
