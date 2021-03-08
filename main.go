@@ -81,17 +81,16 @@ If there is no desired book, it will response all data within the API.
 func updateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var (
-		newBook     Book
-		param       = mux.Vars(r)
-		latestId, _ = strconv.Atoi(books[len(books)-1].ID)
+		newBook   Book
+		param     = mux.Vars(r)
 	)
 
-	for i, currBook := range books {
-		if currBook.ID == param["id"] {
+	for i, currentBook := range books {
+		if currentBook.ID == param["id"] {
 
 			books = append(books[:i], books[i+1:]...)
 			_ = json.NewDecoder(r.Body).Decode(&newBook)
-			newBook.ID = strconv.Itoa(latestId + 1)
+			newBook.ID = currentBook.ID
 			books = append(books, newBook)
 
 			json.NewEncoder(w).Encode(newBook)
