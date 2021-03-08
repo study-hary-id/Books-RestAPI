@@ -28,10 +28,14 @@ type Author struct {
 }
 
 /*
-books is a collection of books.
+books is a collection of book.
 */
 var books []Book
 
+/*
+getBook handler will give a specific book with particular id,
+if there is no desired book then it will return blank Book type.
+*/
 func getBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var param = mux.Vars(r)
@@ -45,11 +49,17 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&Book{})
 }
 
+/*
+getBooks handler will give all book data within the API.
+*/
 func getBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(books)
 }
 
+/*
+createBook handler will add one book to the API or to the database.
+*/
 func createBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var (
@@ -64,6 +74,10 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
+/*
+updateBook handler will update data from a book within the API or database.
+If there is no desired book, it will response all data within the API.
+*/
 func updateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var (
@@ -87,6 +101,9 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(books)
 }
 
+/*
+deleteBook handler will delete a specific book with particular id.
+*/
 func deleteBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var param = mux.Vars(r)
@@ -101,8 +118,10 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Initialization a new router
 	var r = mux.NewRouter()
 
+	// Hardcoded or dummy data for personal use
 	books = append(books, Book{
 		ID:    "1",
 		ISBN:  "978-0-596-15990-0",
@@ -113,11 +132,13 @@ func main() {
 		},
 	})
 
+	// Route handlers and some endpoints in this RESTful API
 	r.HandleFunc("/api/books", getBooks).Methods("GET")
 	r.HandleFunc("/api/books/{id}", getBook).Methods("GET")
 	r.HandleFunc("/api/books", createBook).Methods("POST")
 	r.HandleFunc("/api/books/{id}", updateBook).Methods("PUT")
 	r.HandleFunc("/api/books/{id}", deleteBook).Methods("DELETE")
 
+	// I don't know yet what it's used for, but more or less for starting the server
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
